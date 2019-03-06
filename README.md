@@ -1,10 +1,37 @@
 # 前言
 
-适合基于ssh秘钥的中小公司环境, 代码逻辑简单, 需要运维兄弟会一点python, 自定义与公司业务相关的功能,自行发挥.
+基于ssh-key,git仓库,supervisor服务管理. 
+
+代码逻辑和技术实现简单,无需专业运维开发功底,会点python的运维即可上手维护源码,自定义与公司业务相关的功能,自行发挥.
+
+    python,flask,js,mysql,ldap
+    
+    git: 仅支持git,只会拉取当前项目分支最新代码,建议控制上线用户分组权限,增加Code Review过程.gitlab可使用Merge Requests功能.
+    
+    ssh: 需要普通用户ssh秘钥无密码方式,无需安装其他客户端
+    
+    上线工单: 支持给不同人员独立分组的上线权限,并可以控制上线时间
+    
+    supervisor: 守护进程,自动生成模板,需要标准部署,普通用户可以操作权限,并指定加载目录下配置文件.
+    
+    发布历史日志: 记录时间,执行人,状态,CommitId,详细过程信息
+    
+    服务状态监控: 多线程循环检查所有服务状态,根据supervisor的服务状态,无supervisor,检查ssh状态
+    
+    报警: 目前仅支持钉钉
+    
+    服务上线: 勾选主机,检查git代码是否更新,拉取代码,编译,同步,摘除服务,重启服务,状态检查,挂载服务.顺序执行,任何一部失败终止上线.
+    
+    版本回滚: 可选择最近的几个版本回滚代码.
+    
+    用户分组管理权限
+    
+    对接自动扩容和缩容
+    
 
 
-   ![用户与组管理](https://github.com/liquanzhou/img/blob/master/cedardeploy/%E7%94%A8%E6%88%B7%E4%B8%8E%E7%BB%84%E7%AE%A1%E7%90%86.png "用户与组管理")
- 
+# 发布系统界面
+
    ![添加项目](https://github.com/liquanzhou/img/blob/master/cedardeploy/111.jpeg "添加项目")
 
    ![工单](https://github.com/liquanzhou/img/blob/master/cedardeploy/444.jpeg "工单")
@@ -13,9 +40,8 @@
 
    ![日志](https://github.com/liquanzhou/img/blob/master/cedardeploy/222.jpeg "日志")
 
-   ![服务失败列表](https://github.com/liquanzhou/img/blob/master/cedardeploy/%E6%9C%8D%E5%8A%A1%E5%A4%B1%E8%B4%A5%E5%88%97%E8%A1%A8.png "服务失败列表")
 
-
+# 发布过程介绍
 支持编译发布的项目类型,每个项目都需要填git地址,jobs,sh,static也是需要统一的git仓库管理.
 
     
@@ -143,7 +169,7 @@
 
     如果都启动正常, 检查服务也正常启动, 可以配置定时任务报警
 
-    * * * * * python /app/deploy/app/hostscheck/service_alarm.py >> /data/log/service_alarm.log 2>&1
+    * * * * * cd /app/deploy/app/hostscheck/;python service_alarm.py >> /data/log/service_alarm.log 2>&1
 
 
 
